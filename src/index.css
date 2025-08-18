@@ -1,0 +1,24 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+* { -webkit-tap-highlight-color: transparent; }
+.card {
+  @apply bg-slate-900/70 border border-slate-800 rounded-2xl shadow-lg shadow-black/20;
+}
+.btn {
+  @apply px-3 py-2 rounded-xl text-sm font-medium border border-slate-700 bg-slate-800 active:scale-[0.98] transition;
+}
+.btn-primary { @apply bg-brand border-brand/30; }
+.input {
+  @apply w-full bg-slate-900/80 border border-slate-700 rounded-xl px-3 py-2 outline-none focus:border-brand;
+}
+.badge { @apply text-[10px] px-2 py-1 rounded-full bg-slate-800 border border-slate-700; }
+.fab {
+  @apply fixed bottom-5 right-5 z-50 btn btn-primary rounded-full w-14 h-14 grid place-items-center text-2xl;
+}
+.header {
+  @apply sticky top-0 z-40 bg-slate-950/80 backdrop-blur border-b border-slate-800;
+}
