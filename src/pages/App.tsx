@@ -17,8 +17,8 @@ export default function App() {
   const [showAddModal, setShowAddModal] = useState(false)
   const [showAuthModal, setShowAuthModal] = useState(false)
 
-  function handleAddNote(title: string, content: string, status?: string) {
-    void addNote({ title, content, status })
+  function handleAddNote(title: string, content: string) {
+    void addNote({ title, content })
   }
 
   async function handleSignOut() {
