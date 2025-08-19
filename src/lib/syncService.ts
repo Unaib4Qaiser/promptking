@@ -26,9 +26,11 @@ export class SyncService {
     }, 30000) // Sync every 30 seconds when online
   }
 
-  onSyncComplete(callback: () => void) {
+  onSyncComplete(callback: () => void): () => void {
     this.syncCallbacks.add(callback)
-    return () => this.syncCallbacks.delete(callback)
+    return () => {
+      this.syncCallbacks.delete(callback)
+    }
   }
 
   private notifySyncComplete() {

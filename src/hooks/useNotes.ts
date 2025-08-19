@@ -27,7 +27,7 @@ export function useNotes(search: string) {
     const unsubscribe = syncService.onSyncComplete(() => {
       setSyncing(false)
     })
-    return unsubscribe
+    return () => unsubscribe()
   }, [])
 
   const filtered = useMemo(() => {
