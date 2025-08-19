@@ -9,7 +9,7 @@ export function useAuth() {
 
   useEffect(() => {
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }: any) => {
       setUser(session?.user ?? null)
       setLoading(false)
       
@@ -17,11 +17,14 @@ export function useAuth() {
       if (session?.user) {
         syncService.initialSync()
       }
+    }).catch(() => {
+      // If Supabase is not configured, just set loading to false
+      setLoading(false)
     })
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      async (event: any, session: any) => {
         setUser(session?.user ?? null)
         setLoading(false)
         
@@ -32,7 +35,7 @@ export function useAuth() {
       }
     )
 
-    return () => subscription.unsubscribe()
+    return () => subscription?.unsubscribe?.()
   }, [])
 
   const signUp = async (email: string, password: string) => {

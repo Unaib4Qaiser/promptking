@@ -206,7 +206,7 @@ export class SyncService {
         // Clear local notes and replace with remote
         await db.notes.clear()
         await db.notes.bulkAdd(
-          remoteNotes.map(note => ({ ...note, synced: true }))
+          remoteNotes.map((note: any) => ({ ...note, synced: true }))
         )
       }
     } catch (error) {

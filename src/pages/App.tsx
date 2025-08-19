@@ -64,12 +64,19 @@ export default function App() {
               </button>
             </div>
           ) : (
-            <button
-              onClick={() => setShowAuthModal(true)}
-              className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-            >
-              Sign In
-            </button>
+            <>
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+              >
+                Sign In
+              </button>
+              {(!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) && (
+                <div className="text-xs text-orange-500">
+                  Demo Mode
+                </div>
+              )}
+            </>
           )}
         </div>
       </header>
