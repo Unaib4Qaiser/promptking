@@ -13,6 +13,9 @@ export default function NoteCard({ note, onEdit }:{ note: Note; onEdit:(n:Note)=
     <div className="card p-3 flex flex-col gap-2 h-full min-h-[140px] md:min-h-[180px]">
       <div className="flex items-center justify-between gap-2">
         <h3 className="font-semibold text-sm line-clamp-2">{note.title}</h3>
+        {note.synced === false && (
+          <div className="w-2 h-2 bg-orange-500 rounded-full" title="Not synced"></div>
+        )}
       </div>
       <p className="text-xs text-slate-300 line-clamp-6 md:line-clamp-8 whitespace-pre-wrap flex-1">{note.content || 'No content'}</p>
       <div className="mt-auto pt-2 flex gap-2 justify-end">

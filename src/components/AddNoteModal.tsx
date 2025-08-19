@@ -3,21 +3,23 @@ import { FormEvent, useState } from 'react'
 interface AddNoteModalProps {
   open: boolean
   onClose: () => void
-  onSave: (title: string, content: string) => void
+  onSave: (title: string, content: string, status?: string) => void
 }
 
 export default function AddNoteModal({ open, onClose, onSave }: AddNoteModalProps) {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
+  const [status, setStatus] = useState('todo')
 
   if (!open) return null
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     if (title.trim()) {
-      onSave(title.trim(), content.trim())
+      onSave(title.trim(), content.trim(), status)
       setTitle('')
       setContent('')
+      setStatus('todo')
       onClose()
     }
   }
@@ -25,6 +27,7 @@ export default function AddNoteModal({ open, onClose, onSave }: AddNoteModalProp
   const handleClose = () => {
     setTitle('')
     setContent('')
+    setStatus('todo')
     onClose()
   }
 
@@ -71,6 +74,22 @@ export default function AddNoteModal({ open, onClose, onSave }: AddNoteModalProp
               onChange={(e) => setContent(e.target.value)}
               rows={4}
             />
+          </div>
+          
+          <div>
+            <label htmlFor="note-status" className="block text-sm font-medium mb-1">
+              Status
+            </label>
+            <select
+              id="note-status"
+              className="input w-full"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            >
+              <option value="todo">To Do</option>
+              <option value="doing">Doing</option>
+              <option value="done">Done</option>
+            </select>
           </div>
           
           <div className="flex gap-2 justify-end">
