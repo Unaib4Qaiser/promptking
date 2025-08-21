@@ -16,6 +16,7 @@ function subscribe<T>(query: () => Promise<T>, cb: (value: T) => void) {
 export function useNotes(search: string) {
   const [notes, setNotes] = useState<Note[]>([])
   const [syncing, setSyncing] = useState(false)
+  const [syncError, setSyncError] = useState<string | null>(null)
   
   // subscribe to local DB
   useEffect(() => {
@@ -24,10 +25,35 @@ export function useNotes(search: string) {
 
   // Listen for sync events
   useEffect(() => {
-    const unsubscribe = syncService.onSyncComplete(() => {
+    const unsubscribeComplete = syncService.onSyncComplete(() => {
       setSyncing(false)
+      setSyncError(null)
     })
-    return unsubscribe
+    
+    const unsubscribeError = syncService.onSyncError((error) => {
+      setSyncing(false)
+      setSyncError(error)
+    })
+    
+    return () => {
+      unsubscribeComplete()
+      unsubscribeError()
+    }
+  }, [])
+
+  // Check if there are pending sync operations
+  useEffect(() => {
+    const checkPendingOps = async () => {
+      const pendingOps = await db.outbox.count()
+      if (pendingOps > 0 && navigator.onLine) {
+        setSyncing(true)
+      }
+    }
+    
+    checkPendingOps()
+    const interval = setInterval(checkPendingOps, 5000) // Check every 5 seconds
+    
+    return () => clearInterval(interval)
   }, [])
 
   const filtered = useMemo(() => {
@@ -104,6 +130,7 @@ export function useNotes(search: string) {
     addNote, 
     updateNote, 
     removeNote,
-    syncing
+    syncing,
+    syncError
   }
 }

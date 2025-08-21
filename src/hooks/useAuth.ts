@@ -10,14 +10,17 @@ export function useAuth() {
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }: any) => {
+      console.log('Initial session check:', session?.user ? 'authenticated' : 'not authenticated')
       setUser(session?.user ?? null)
       setLoading(false)
       
       // Trigger initial sync if user is authenticated
       if (session?.user) {
+        console.log('Triggering initial sync for existing session')
         syncService.initialSync()
       }
-    }).catch(() => {
+    }).catch((error) => {
+      console.log('Auth session check failed (probably Supabase not configured):', error)
       // If Supabase is not configured, just set loading to false
       setLoading(false)
     })
@@ -25,12 +28,17 @@ export function useAuth() {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event: any, session: any) => {
+        console.log('Auth state changed:', event, session?.user ? 'user present' : 'no user')
         setUser(session?.user ?? null)
         setLoading(false)
         
         if (event === 'SIGNED_IN' && session?.user) {
+          console.log('User signed in, triggering initial sync')
           // Trigger initial sync when user signs in
           await syncService.initialSync()
+        } else if (event === 'SIGNED_OUT') {
+          console.log('User signed out')
+          // Could optionally clear local data here if desired
         }
       }
     )

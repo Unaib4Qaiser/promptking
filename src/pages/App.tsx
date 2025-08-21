@@ -11,7 +11,7 @@ import type { Note } from '../types'
 
 export default function App() {
   const [query, setQuery] = useState('')
-  const { notes, addNote, updateNote, removeNote, syncing } = useNotes(query)
+  const { notes, addNote, updateNote, removeNote, syncing, syncError } = useNotes(query)
   const { user, loading, signOut } = useAuth()
   const [editing, setEditing] = useState<Note | null>(null)
   const [showAddModal, setShowAddModal] = useState(false)
@@ -44,10 +44,22 @@ export default function App() {
               <span>Syncing...</span>
             </div>
           )}
+          {syncError && (
+            <div className="text-sm text-red-600 flex items-center gap-1" title={syncError}>
+              <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+              Sync Error
+            </div>
+          )}
           {!navigator.onLine && (
             <div className="text-sm text-orange-600 flex items-center gap-1">
               <span className="w-2 h-2 bg-orange-600 rounded-full"></span>
               Offline
+            </div>
+          )}
+          {user && navigator.onLine && !syncing && !syncError && (
+            <div className="text-sm text-green-600 flex items-center gap-1">
+              <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+              Online
             </div>
           )}
         </div>
